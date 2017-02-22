@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	cards = []int{1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10}
-	temp = [52]int{}
 	random = rand.New(rand.NewSource(time.Now().Unix()))
 )
 
 func main() {
+
+	initcards := []int{1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10}
 
 	playerCard := make([]int, 0)
 	dealerCard := make([]int, 0)
@@ -24,10 +24,11 @@ func main() {
 	DisBomb := false
 
 	fmt.Println("Game begins...")
+	cards := shuffle(initcards)
 
-	playerCard = append(playerCard, pop(cards))
-	dealerCard = append(dealerCard, pop(cards))
-	playerCard = append(playerCard, pop(cards))
+	playerCard = append(playerCard, pop(&cards))
+	dealerCard = append(dealerCard, pop(&cards))
+	playerCard = append(playerCard, pop(&cards))
 	fmt.Print("The player's cards are: ")
 	fmt.Print(playerCard[0])
 	fmt.Print(" and ")
@@ -37,7 +38,7 @@ func main() {
 		fmt.Println("The player has blackjack!")
 		fmt.Println("Game is over, the player is the winner.")
 	} else {
-		dealerCard = append(dealerCard, pop(cards))
+		dealerCard = append(dealerCard, pop(&cards))
 		fmt.Print("The dealer's cards are: ")
 		fmt.Print(dealerCard[0])
 		fmt.Print(" and ")
@@ -66,7 +67,7 @@ func main() {
 
 				switch input {
 				case "yes\n":{
-					playerCard = append(playerCard, pop(cards))
+					playerCard = append(playerCard, pop(&cards))
 					fmt.Print("This card is:")
 					fmt.Println(playerCard[len(playerCard) - 1])
 					playerSum += playerCard[len(playerCard) - 1]
@@ -100,7 +101,7 @@ func main() {
 			for (isDValid) {
 				for dealerSum < 16 {
 					fmt.Println("Because the sum of dealer's cards is less than 16, he must add one more card.")
-					dealerCard = append(dealerCard, pop(cards))
+					dealerCard = append(dealerCard, pop(&cards))
 					fmt.Print("The new card is:")
 					fmt.Println(dealerCard[len(dealerCard) - 1])
 					dealerSum += dealerCard[len(dealerCard) - 1]
@@ -130,7 +131,7 @@ func main() {
 
 					switch input {
 					case "yes\n":{
-						dealerCard = append(dealerCard, pop(cards))
+						dealerCard = append(dealerCard, pop(&cards))
 						fmt.Print("This card is:")
 						fmt.Println(dealerCard[len(dealerCard) - 1])
 						dealerSum += dealerCard[len(dealerCard) - 1]
@@ -175,6 +176,7 @@ func main() {
 
 
 func shuffle (cards []int) []int {
+	temp := [52]int{}
 	l := len(cards)
 	for i := l-1; i>0; i-- {
 		r := random.Intn(i+1)
@@ -185,11 +187,10 @@ func shuffle (cards []int) []int {
 }
 
 //deal cards randomly
-func pop (cards []int) int  {
-	cards = shuffle(cards)
-	pos := (len(cards)-1)/2
-	card := cards[pos]
-	cards = append(cards[:pos],cards[pos+1:]...)
+func pop (cards *[]int) int  {
+	pos := rand.Intn(len(*cards)-1)
+	card := (*cards)[pos]
+	*cards = append((*cards)[1:pos],(*cards)[pos:]...)
 	return card
 }
 
