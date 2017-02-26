@@ -20,33 +20,34 @@ func main() {
 	playerCard := make([]int, 0)
 	dealerCard := make([]int, 0)
 
-	PisBomb := false
-	DisBomb := false
+	PisBust := false
+	DisBust := false
 
 	fmt.Println("Game begins...")
 	cards := shuffle(initcards)
 
 	playerCard = append(playerCard, pop(&cards))
+	fmt.Print("The player's first card is: ")
+	fmt.Println(playerCard[0])
 	dealerCard = append(dealerCard, pop(&cards))
+	fmt.Print("The dealer's first card is: ")
+	fmt.Println(dealerCard[0])
 	playerCard = append(playerCard, pop(&cards))
-	fmt.Print("The player's cards are: ")
-	fmt.Print(playerCard[0])
-	fmt.Print(" and ")
+	fmt.Print("The player's second card is: ")
 	fmt.Println(playerCard[1])
+	dealerCard = append(dealerCard, pop(&cards))
 
-	if blackjack(playerCard) {
-		fmt.Println("The player has blackjack!")
-		fmt.Println("Game is over, the player is the winner.")
-	} else {
-		dealerCard = append(dealerCard, pop(&cards))
-		fmt.Print("The dealer's cards are: ")
-		fmt.Print(dealerCard[0])
-		fmt.Print(" and ")
+	if blackjack(dealerCard) {
+		fmt.Print("The dealer's second card is: ")
 		fmt.Println(dealerCard[1])
+		fmt.Println("The dealer has blackjack!")
+		fmt.Println("Game is over, the dealer is the winner.")
 
-		if blackjack(dealerCard) {
-			fmt.Println("The dealer has blackjack!")
-			fmt.Println("Game is over, the dealer is the winner.")
+	} else {
+		if blackjack(playerCard) {
+			fmt.Println("The player has blackjack!")
+			fmt.Println("Game is over, the player is the winner.")
+
 		} else {
 			playerSum := playerCard[0] + playerCard[1]
 			dealerSum := dealerCard[0] + dealerCard[1]
@@ -79,14 +80,14 @@ func main() {
 						isPValid = false
 						break
 					} else if playerSum > 21 {
-						fmt.Println("Player's cards bombed.")
-						PisBomb = true
+						fmt.Println("Player's cards are busting.")
+						PisBust = true
 						isPValid = false
 						break
 					}
 					break
 				}
-				case "no\n" :{
+				case "hit\n" :{
 					isPValid = false
 					break
 				}
@@ -94,13 +95,15 @@ func main() {
 				}
 			}
 
+			fmt.Print("The dealer's second card is: ")
+			fmt.Println(dealerCard[1])
 			fmt.Print("The sum of dealer's cards is:")
 			fmt.Println(dealerSum)
 
 			isDValid := true
 			for (isDValid) {
-				for dealerSum < 16 {
-					fmt.Println("Because the sum of dealer's cards is less than 16, he must add one more card.")
+				for dealerSum < 17  {
+					fmt.Println("Because the sum of dealer's cards is less than 17, he must add one more card.")
 					dealerCard = append(dealerCard, pop(&cards))
 					fmt.Print("The new card is:")
 					fmt.Println(dealerCard[len(dealerCard) - 1])
@@ -113,8 +116,8 @@ func main() {
 						break
 					}
 					if dealerSum > 21 {
-						fmt.Println("dealer's cards bombed.")
-						DisBomb = true
+						fmt.Println("dealer's cards are busting.")
+						DisBust = true
 						break
 					}
 				}
@@ -143,13 +146,13 @@ func main() {
 							isDValid = false
 							break
 						} else if dealerSum > 21 {
-							fmt.Println("dealer's cards bombed.")
-							DisBomb = true
+							fmt.Println("dealer's cards are busting.")
+							DisBust = true
 							isDValid = false
 							break
 						}
 					}
-					case "no\n" :{
+					case "hit\n" :{
 						isDValid = false
 						break
 					}
@@ -161,11 +164,11 @@ func main() {
 				}
 			}
 
-			if (DisBomb && PisBomb) || (!DisBomb && !PisBomb && (dealerSum == playerSum)) {
-				fmt.Println("Game is over, it's a tie")
-			} else if (DisBomb && !PisBomb) || (!DisBomb && !PisBomb && (dealerSum < playerSum)) {
+			if (DisBust && PisBust) || (!DisBust && !PisBust && (dealerSum == playerSum)) {
+				fmt.Println("Game is over, it's a push")
+			} else if (DisBust && !PisBust) || (!DisBust && !PisBust && (dealerSum < playerSum)) {
 				fmt.Println("Game is over, the player wins")
-			} else if (!DisBomb && PisBomb) || (!DisBomb && !PisBomb && (dealerSum > playerSum)) {
+			} else if (!DisBust && PisBust) || (!DisBust && !PisBust && (dealerSum > playerSum)) {
 				fmt.Println("Game is over, the dealer wins")
 			}
 
