@@ -14,8 +14,8 @@ var (
 
 func main() {
 
-	initcards := []int{1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10}
+	initcards := []int{1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9,
+		10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
 
 	playerCard := make([]int, 0)
 	dealerCard := make([]int, 0)
@@ -35,20 +35,22 @@ func main() {
 	playerCard = append(playerCard, pop(&cards))
 	fmt.Print("The player's second card is: ")
 	fmt.Println(playerCard[1])
-	dealerCard = append(dealerCard, pop(&cards))
 
-	if blackjack(dealerCard) {
-		fmt.Print("The dealer's second card is: ")
-		fmt.Println(dealerCard[1])
-		fmt.Println("The dealer has blackjack!")
-		fmt.Println("Game is over, the dealer is the winner.")
-
+	if blackjack(playerCard) {
+		fmt.Println("The player has blackjack!")
+		fmt.Println("Game is over, the player is the winner.")
 	} else {
-		if blackjack(playerCard) {
-			fmt.Println("The player has blackjack!")
-			fmt.Println("Game is over, the player is the winner.")
+
+		dealerCard = append(dealerCard, pop(&cards))
+
+		if blackjack(dealerCard) {
+			fmt.Print("The dealer's second card is: ")
+			fmt.Println(dealerCard[1])
+			fmt.Println("The dealer has blackjack!")
+			fmt.Println("Game is over, the dealer is the winner.")
 
 		} else {
+
 			playerSum := playerCard[0] + playerCard[1]
 			dealerSum := dealerCard[0] + dealerCard[1]
 
@@ -102,7 +104,7 @@ func main() {
 
 			isDValid := true
 			for (isDValid) {
-				for dealerSum < 17  {
+				for dealerSum < 17 {
 					fmt.Println("Because the sum of dealer's cards is less than 17, he must add one more card.")
 					dealerCard = append(dealerCard, pop(&cards))
 					fmt.Print("The new card is:")
@@ -171,7 +173,6 @@ func main() {
 			} else if (!DisBust && PisBust) || (!DisBust && !PisBust && (dealerSum > playerSum)) {
 				fmt.Println("Game is over, the dealer wins")
 			}
-
 
 		}
 	}
